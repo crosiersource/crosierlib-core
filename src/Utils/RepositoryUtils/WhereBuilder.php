@@ -7,6 +7,7 @@ use CrosierSource\CrosierLibCoreBundle\Utils\DateTimeUtils\DateTimeUtils;
 use CrosierSource\CrosierLibCoreBundle\Utils\NumberUtils\DecimalUtils;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
+use NumberFormatter;
 
 /**
  * Class WhereBuilder

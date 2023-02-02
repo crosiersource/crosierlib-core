@@ -2,9 +2,13 @@
 
 namespace CrosierSource\CrosierLibCoreBundle\Utils\RepositoryUtils;
 
+use CrosierSource\CrosierLibCoreBundle\Exception\ViewException;
 use CrosierSource\CrosierLibCoreBundle\Utils\DateTimeUtils\DateTimeUtils;
 
 /**
+ * Class FilterData
+ *
+ * @package CrosierSource\CrosierLibCoreBundle\Utils\RepositoryUtils
  * @author Carlos Eduardo Pauluk
  */
 class FilterData
@@ -52,14 +56,21 @@ class FilterData
         'BETWEEN_PORCENT' => 2,
     );
 
-
-    public function __construct(string      $field = null,
-                                string      $filterType = 'EQ',
-                                string      $viewFieldName = null,
-                                ?array      $params = null,
-                                string      $fieldType = null,
-                                bool        $jsonDataField = false,
-                                $orFilterData = null)
+    /**
+     * FilterData constructor.
+     * @param null $field
+     * @param null $filterType
+     * @param null $viewFieldName
+     * @param array|null $params
+     * @param null $fieldType
+     */
+    public function __construct($field = null,
+                                string $filterType = 'EQ',
+                                $viewFieldName = null,
+                                ?array $params = null,
+                                $fieldType = null,
+                                bool $jsonDataField = false,
+                                ?FilterData $orFilterData = null)
     {
         // sempre será tratado como array
         $this->setField($field);
@@ -88,16 +99,25 @@ class FilterData
         return $filterData;
     }
 
-    public function setField(mixed $field): FilterData
+    /**
+     * @param mixed $field
+     * @return FilterData
+     */
+    public function setField($field): FilterData
     {
         $field = is_array($field) ? $field : [$field];
         foreach ($field as $k => $f) {
-            $field[$k] = !str_contains($f, '.') ? 'e.' . $f : $f;
+            $field[$k] = strpos($f, '.') === FALSE ? 'e.' . $f : $f;
         }
         $this->field = $field;
         return $this;
     }
 
+    /**
+     * @param $filterType
+     * @return FilterData
+     * @throws ViewException
+     */
     public function setFilterType($filterType): FilterData
     {
         if (!array_key_exists($filterType, self::$filterTypes)) {
@@ -107,6 +127,10 @@ class FilterData
         return $this;
     }
 
+    /**
+     * @param mixed $val
+     * @return FilterData
+     */
     public function setVal($val): FilterData
     {
         if (self::$filterTypes[$this->filterType] === 2) {
@@ -131,12 +155,19 @@ class FilterData
         return $this;
     }
 
+    /**
+     * @param string $fieldType
+     * @return FilterData
+     */
     public function setFieldType(string $fieldType): FilterData
     {
         $this->fieldType = $fieldType;
         return $this;
     }
 
+    /**
+     * @param FilterData|null $orFilterData
+     */
     public function setOrFilterData(?FilterData $orFilterData): FilterData
     {
         $this->orFilterData = $orFilterData;
@@ -144,6 +175,9 @@ class FilterData
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function getOrFilterData()
     {
         return $this->orFilterData;
