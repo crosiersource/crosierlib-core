@@ -2,10 +2,10 @@
 
 namespace CrosierSource\CrosierLibCoreBundle\Entity\Security;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
 use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\EntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\NotUppercase;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
@@ -39,14 +39,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  *
  * @ApiFilter(SearchFilter::class, properties={
- *     "username": "partial", 
+ *     "username": "partial",
  *     "nome": "partial"
  * })
- * 
+ *
  * @ApiFilter(OrderFilter::class, properties={
- *     "id", 
- *     "username", 
- *     "nome", 
+ *     "id",
+ *     "username",
+ *     "nome",
  *     "updated",
  *     "isActive"
  * }, arguments={"orderParameterName"="order"})
@@ -175,7 +175,7 @@ class User implements EntityId, UserInterface, \Serializable
     }
 
 
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = array();
         foreach ($this->userRoles as $role) {
@@ -210,6 +210,7 @@ class User implements EntityId, UserInterface, \Serializable
 
     public function eraseCredentials()
     {
+        // not executed
     }
 
     public function getSalt()
@@ -217,20 +218,18 @@ class User implements EntityId, UserInterface, \Serializable
         return null;
     }
 
-    /**
-     * @return string|null
-     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->id . '-' . $this->username;
+    }
 }

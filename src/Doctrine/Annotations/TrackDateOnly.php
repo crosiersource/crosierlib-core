@@ -3,6 +3,7 @@
 namespace CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations;
 
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -13,6 +14,7 @@ use Doctrine\Common\Annotations\Annotation;
  *
  * @author Carlos Eduardo Pauluk
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class TrackDateOnly extends Annotation
 {
 

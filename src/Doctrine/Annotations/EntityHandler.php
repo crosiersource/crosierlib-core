@@ -3,17 +3,22 @@
 namespace CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations;
 
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\ORM\Mapping\MappingAttribute;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-final class EntityHandler extends Annotation
+#[Attribute(Attribute::TARGET_CLASS)]
+final class EntityHandler implements MappingAttribute
 {
-    /**
-     * @var string
-     */
     public string $entityHandlerClass;
+
+    public function __construct(?string $entityHandlerClass = null)
+    {
+        $this->entityHandlerClass = $entityHandlerClass;
+    }
 
 }
