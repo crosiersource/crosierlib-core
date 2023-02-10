@@ -52,100 +52,100 @@ class EntMenu implements EntityId
     use EntityIdTrait;
 
     /**
-     * @ORM\Column(name="uuid", type="string", nullable=false, length=36)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'uuid', type: 'string', nullable: false, length: 36)]
+    #[Groups('entity')]
     public ?string $UUID = null;
 
     /**
      * Necessário para poder montar a URL corretamente (pois o domínio do App pode variar por ambiente).
      *
-     * @ORM\Column(name="app_uuid", type="string", nullable=false, length=36)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'app_uuid', type: 'string', nullable: false, length: 36)]
+    #[Groups('entity')]
     public ?string $appUUID = null;
 
     /**
      *
-     * @ORM\Column(name="label", type="string", nullable=false, length=255)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'label', type: 'string', nullable: false, length: 255)]
+    #[Groups('entity')]
     public ?string $label = null;
 
     /**
      *
-     * @ORM\Column(name="icon", type="string", nullable=true, length=50)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'icon', type: 'string', nullable: true, length: 50)]
+    #[Groups('entity')]
     public ?string $icon = null;
 
     /**
      *
-     * @ORM\Column(name="tipo", type="string", nullable=false, length=50)
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'tipo', type: 'string', nullable: false, length: 50)]
+    #[Groups('entity')]
     public ?string $tipo = null;
 
     /**
      *
-     * @ORM\Column(name="ordem", type="integer", nullable=true)
-     * @Groups("entity")
      *
      * @var int|null
      */
+    #[ORM\Column(name: 'ordem', type: 'integer', nullable: true)]
+    #[Groups('entity')]
     public ?int $ordem = null;
 
     /**
      *
-     * @ORM\Column(name="css_style", type="string", nullable=true, length=200)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'css_style', type: 'string', nullable: true, length: 200)]
+    #[Groups('entity')]
     public ?string $cssStyle = null;
 
     /**
      *
-     * @ORM\Column(name="roles", type="string", nullable=true, length=200)
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'roles', type: 'string', nullable: true, length: 200)]
+    #[Groups('entity')]
     public ?string $roles = null;
 
     /**
      *
-     * @ORM\Column(name="url", type="string", nullable=false, length=2000)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'url', type: 'string', nullable: false, length: 2000)]
+    #[Groups('entity')]
     public ?string $url = null;
 
     /**
      * @var string
-     * @ORM\Column(name="pai_uuid", type="string", nullable=true, length=36)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'pai_uuid', type: 'string', nullable: true, length: 36)]
+    #[Groups('entity')]
     public ?string $paiUUID = null;
 
     /**

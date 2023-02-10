@@ -65,106 +65,102 @@ class User implements EntityId, UserInterface, \Serializable
 
     /**
      * @NotUppercase()
-     * @ORM\Column(name="username", type="string", length=90, nullable=false)
-     * @Groups("user")
      * @var null|string
      */
+    #[ORM\Column(name: 'username', type: 'string', length: 90, nullable: false)]
+    #[Groups('user')]
     public ?string $username = null;
 
 
     /**
      * @NotUppercase()
-     * @ORM\Column(name="password", type="string", length=90, nullable=false)
-     * @Groups("userPassword")
      * @var null|string
      */
+    #[ORM\Column(name: 'password', type: 'string', length: 90, nullable: false)]
+    #[Groups('userPassword')]
     public ?string $password = null;
 
 
     /**
      * @NotUppercase()
-     * @ORM\Column(name="email", type="string", length=90, nullable=false)
-     * @Groups("user")
      * @var null|string
      */
+    #[ORM\Column(name: 'email', type: 'string', length: 90, nullable: false)]
+    #[Groups('user')]
     public ?string $email = null;
 
 
     /**
-     * @ORM\Column(name="fone", type="string", length=90)
-     * @Groups("user")
      * @var null|string
      */
+    #[ORM\Column(name: 'fone', type: 'string', length: 90)]
+    #[Groups('user')]
     public ?string $fone = null;
 
 
     /**
      *
-     * @ORM\Column(name="nome", type="string", length=90, nullable=false)
-     * @Groups("user")
      * @var null|string
      */
+    #[ORM\Column(name: 'nome', type: 'string', length: 90, nullable: false)]
+    #[Groups('user')]
     public ?string $nome = null;
 
 
     /**
      *
-     * @ORM\Column(name="ativo", type="boolean", nullable=false)
-     * @Groups("user")
      * @var null|bool
      */
+    #[ORM\Column(name: 'ativo', type: 'boolean', nullable: false)]
+    #[Groups('user')]
     public bool $isActive = true;
 
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="CrosierSource\CrosierLibCoreBundle\Entity\Security\Group")
-     * @ORM\JoinColumn(name="group_id", nullable=true)
-     * @Groups("user")
      *
      * @var null|Group
      */
+    #[ORM\ManyToOne(targetEntity: 'CrosierSource\CrosierLibCoreBundle\Entity\Security\Group')]
+    #[ORM\JoinColumn(name: 'group_id', nullable: true)]
+    #[Groups('user')]
     public ?Group $group = null;
 
 
     /**
      * Renomeei o atributo para poder funcionar corretamente com o security do Symfony.
      *
-     * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(name="sec_user_role",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")})
      *
-     * @Groups("user")
      */
+    #[ORM\JoinTable(name: 'sec_user_role')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Role')]
+    #[Groups('user')]
     public $userRoles = null;
 
 
     /**
      * @NotUppercase()
-     * @ORM\Column(name="api_token", type="string", length=255, nullable=false)
      * @var null|string
      */
+    #[ORM\Column(name: 'api_token', type: 'string', length: 255, nullable: false)]
     public ?string $apiToken = null;
 
 
-    /**
-     * @ORM\Column(name="api_token_expires_at", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'api_token_expires_at', type: 'datetime', nullable: false)]
     public ?\DateTime $apiTokenExpiresAt = null;
 
 
     /**
      * @NotUppercase()
-     * @ORM\Column(name="token_recupsenha", type="string", length=36, nullable=true)
      * @var null|string
      */
+    #[ORM\Column(name: 'token_recupsenha', type: 'string', length: 36, nullable: true)]
     public ?string $tokenRecupSenha = null;
 
 
-    /**
-     * @ORM\Column(name="dt_valid_token_recupsenha", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'dt_valid_token_recupsenha', type: 'datetime', nullable: false)]
     public ?\DateTime $dtValidadeTokenRecupSenha = null;
 
 

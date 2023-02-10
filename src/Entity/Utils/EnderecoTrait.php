@@ -16,83 +16,83 @@ trait EnderecoTrait
 
     /**
      *
-     * @ORM\Column(name="cep", type="string", nullable=true, length=9)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'cep', type: 'string', nullable: true, length: 9)]
+    #[Groups('entity')]
     private $cep;
 
     /**
      *
-     * @ORM\Column(name="logradouro", type="string", nullable=true, length=200)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'logradouro', type: 'string', nullable: true, length: 200)]
+    #[Groups('entity')]
     private $logradouro;
 
     /**
      *
-     * @ORM\Column(name="numero", type="string", nullable=true, length=200)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'numero', type: 'string', nullable: true, length: 200)]
+    #[Groups('entity')]
     private $numero;
 
     /**
      *
-     * @ORM\Column(name="complemento", type="string", nullable=true, length=120)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'complemento', type: 'string', nullable: true, length: 120)]
+    #[Groups('entity')]
     private $complemento;
 
     /**
      *
-     * @ORM\Column(name="bairro", type="string", nullable=true, length=120)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'bairro', type: 'string', nullable: true, length: 120)]
+    #[Groups('entity')]
     private $bairro;
 
     /**
      *
-     * @ORM\Column(name="cidade", type="string", nullable=true, length=120)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'cidade', type: 'string', nullable: true, length: 120)]
+    #[Groups('entity')]
     private $cidade;
 
     /**
      *
-     * @ORM\Column(name="estado", type="string", nullable=true, length=2)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'estado', type: 'string', nullable: true, length: 2)]
+    #[Groups('entity')]
     private $estado;
 
     /**
      *
-     * @ORM\Column(name="tipo_endereco", type="string", nullable=true, length=100)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'tipo_endereco', type: 'string', nullable: true, length: 100)]
+    #[Groups('entity')]
     private $tipoEndereco;
 
     /**
      *
-     * @ORM\Column(name="obs", type="string", nullable=true, length=3000)
      * @var string|null
      *
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'obs', type: 'string', nullable: true, length: 3000)]
+    #[Groups('entity')]
     private $obs;
 
     /**

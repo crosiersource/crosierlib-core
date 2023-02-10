@@ -52,18 +52,18 @@ class Role implements EntityId
 
     /**
      *
-     * @ORM\Column(name="role", type="string", length=90, unique=true)
-     * @Groups("role")
      * @var null|string
      */
+    #[ORM\Column(name: 'role', type: 'string', length: 90, unique: true)]
+    #[Groups('role')]
     public ?string $role = null;
 
     /**
      *
-     * @ORM\Column(name="descricao", type="string", length=90)
-     * @Groups("role")
      * @var null|string
      */
+    #[ORM\Column(name: 'descricao', type: 'string', length: 90)]
+    #[Groups('role')]
     public ?string $descricao = null;
     
 

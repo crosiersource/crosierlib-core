@@ -49,31 +49,31 @@ class App implements EntityId
 
 
     /**
-     * @ORM\Column(name="uuid", type="string", nullable=false, length=36)
      * @NotUppercase()
-     * @Groups("app")
      *
      * @var null|string
      */
+    #[ORM\Column(name: 'uuid', type: 'string', nullable: false, length: 36)]
+    #[Groups('app')]
     public ?string $UUID = null;
 
     /**
      *
-     * @ORM\Column(name="nome", type="string", nullable=true, length=300)
      * @NotUppercase()
-     * @Groups("app")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'nome', type: 'string', nullable: true, length: 300)]
+    #[Groups('app')]
     public ?string $nome = null;
 
     /**
      *
-     * @ORM\Column(name="obs", type="string", nullable=true, length=5000)
-     * @Groups("app")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'obs', type: 'string', nullable: true, length: 5000)]
+    #[Groups('app')]
     public ?string $obs = null;
 
     /**

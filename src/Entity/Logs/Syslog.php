@@ -68,92 +68,92 @@ class Syslog
 {
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="bigint")
-     * @Groups("entityId")
      * @var null|int
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'bigint')]
+    #[Groups('entityId')]
     public ?int $id = null;
 
     /**
-     * @ORM\Column(name="uuid_sess", type="string")
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'uuid_sess', type: 'string')]
+    #[Groups('entity')]
     public ?string $uuidSess = null;
     
     /**
-     * @ORM\Column(name="tipo", type="string")
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'tipo', type: 'string')]
+    #[Groups('entity')]
     public ?string $tipo = null;
 
     /**
-     * @ORM\Column(name="app", type="string")
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'app', type: 'string')]
+    #[Groups('entity')]
     public ?string $app = null;
 
     /**
-     * @ORM\Column(name="component", type="string")
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'component', type: 'string')]
+    #[Groups('entity')]
     public ?string $component = null;
 
     /**
-     * @ORM\Column(name="act", type="string")
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'act', type: 'string')]
+    #[Groups('entity')]
     public ?string $act = null;
 
     /**
-     * @ORM\Column(name="username", type="string")
-     * @Groups("entity")
      * @NotUppercase()
      * @var string|null
      */
+    #[ORM\Column(name: 'username', type: 'string')]
+    #[Groups('entity')]
     public ?string $username = null;
 
     /**
-     * @ORM\Column(name="moment", type="datetime")
-     * @Groups("entity")
      * @var null|\DateTime
      */
+    #[ORM\Column(name: 'moment', type: 'datetime')]
+    #[Groups('entity')]
     public ?\DateTime $moment = null;
 
     /**
-     * @ORM\Column(name="obs", type="string")
-     * @Groups("obs")
      * @var string|null
      */
+    #[ORM\Column(name: 'obs', type: 'string')]
+    #[Groups('obs')]
     public ?string $obs = null;
 
     /**
-     * @ORM\Column(name="delete_after", type="datetime")
-     * @Groups("entityId")
      * @var null|\DateTime
      */
+    #[ORM\Column(name: 'delete_after', type: 'datetime')]
+    #[Groups('entityId')]
     public ?\DateTime $deleteAfter = null;
 
     /**
-     * @ORM\Column(name="json_data", type="json")
      * @var null|array
      * @NotUppercase()
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'json_data', type: 'json')]
+    #[Groups('entity')]
     public ?array $jsonData = null;
 
 
     /**
-     * @Groups("obsp")
-     * @SerializedName("obs")
      * @var null|string
      */
+    #[Groups('obsp')]
+    #[SerializedName('obs')]
     public function getObsp(): ?string
     {
         return $this->obs ? (substr($this->obs, 0, 200) . '...') : null;

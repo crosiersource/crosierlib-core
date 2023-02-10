@@ -53,33 +53,33 @@ class Estabelecimento implements EntityId
 
     /**
      *
-     * @ORM\Column(name="codigo", type="integer", nullable=false)
-     * @Groups("estabelecimento")
      * @var null|int
      */
+    #[ORM\Column(name: 'codigo', type: 'integer', nullable: false)]
+    #[Groups('estabelecimento')]
     public ?int $codigo = null;
 
     /**
      *
-     * @ORM\Column(name="descricao", type="string", nullable=true, length=40)
-     * @Groups("estabelecimento")
      * @var null|string
      */
+    #[ORM\Column(name: 'descricao', type: 'string', nullable: true, length: 40)]
+    #[Groups('estabelecimento')]
     public ?string $descricao = null;
 
     /**
      *
-     * @ORM\Column(name="concreto", type="boolean", nullable=false)
-     * @Groups("estabelecimento")
      * @var null|bool
      */
+    #[ORM\Column(name: 'concreto', type: 'boolean', nullable: false)]
+    #[Groups('estabelecimento')]
     public ?bool $concreto = false;
 
     /**
-     * @ORM\Column(name="json_data", type="json")
      * @NotUppercase
-     * @Groups("estabelecimento_jsonData")
      */
+    #[ORM\Column(name: 'json_data', type: 'json')]
+    #[Groups('estabelecimento_jsonData')]
     public ?array $jsonData = null;
 
 

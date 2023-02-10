@@ -62,62 +62,62 @@ class EntityChange
 {
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="bigint")
-     * @Groups("entityId")
      * @var null|int
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'bigint')]
+    #[Groups('entityId')]
     public ?int $id = null;
 
     /**
-     * @ORM\Column(name="entity_class", type="string", nullable=false)
      * @NotUppercase()
-     * @Groups("entity")
      * @var null|string
      */
+    #[ORM\Column(name: 'entity_class', type: 'string', nullable: false)]
+    #[Groups('entity')]
     public ?string $entityClass = null;
 
     /**
-     * @ORM\Column(name="entity_id", type="bigint", nullable=false)
-     * @Groups("entity")
      * @var int|null
      */
+    #[ORM\Column(name: 'entity_id', type: 'bigint', nullable: false)]
+    #[Groups('entity')]
     public ?int $entityId = null;
 
     /**
-     * @ORM\Column(name="changing_user_id", type="bigint", nullable=false)
-     * @Groups("entity")
      * @var int|null
      */
+    #[ORM\Column(name: 'changing_user_id', type: 'bigint', nullable: false)]
+    #[Groups('entity')]
     public ?int $changingUserId = null;
 
     /**
-     * @ORM\Column(name="changing_user_username", type="string", nullable=false)
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'changing_user_username', type: 'string', nullable: false)]
+    #[Groups('entity')]
     public ?string $changingUserUsername = null;
 
     /**
-     * @ORM\Column(name="changing_user_nome", type="string", nullable=false)
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'changing_user_nome', type: 'string', nullable: false)]
+    #[Groups('entity')]
     public ?string $changingUserNome = null;
 
     /**
-     * @ORM\Column(name="changed_at", type="datetime", nullable=false)
-     * @Groups("entity")
      * @var null|\DateTime
      */
+    #[ORM\Column(name: 'changed_at', type: 'datetime', nullable: false)]
+    #[Groups('entity')]
     public ?\DateTime $changedAt = null;
 
     /**
-     * @ORM\Column(name="changes", type="string", nullable=false)
-     * @Groups("entity")
      * @var string|null
      */
+    #[ORM\Column(name: 'changes', type: 'string', nullable: false)]
+    #[Groups('entity')]
     public ?string $obs = null;
 
 

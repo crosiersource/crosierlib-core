@@ -52,21 +52,17 @@ class Group implements EntityId
 
     /**
      *
-     * @ORM\Column(name="groupname", type="string", length=90, unique=true)
      * @var null|string
-     * @Groups("group")
      */
+    #[ORM\Column(name: 'groupname', type: 'string', length: 90, unique: true)]
+    #[Groups('group')]
     public ?string $groupname = null;
 
-    /**
-     *
-     * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(name="sec_group_role",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
-     * @Groups("group")
-     */
+    #[ORM\JoinTable(name: 'sec_group_role')]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'Role')]
+    #[Groups('group')]
     public $roles;
 
 

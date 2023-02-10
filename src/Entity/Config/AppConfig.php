@@ -51,38 +51,38 @@ class AppConfig implements EntityId
 
     /**
      *
-     * @ORM\Column(name="chave", type="string", nullable=false, length=255)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'chave', type: 'string', nullable: false, length: 255)]
+    #[Groups('entity')]
     public ?string $chave = null;
 
     /**
      *
-     * @ORM\Column(name="valor", type="text", nullable=true)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var string|null
      */
+    #[ORM\Column(name: 'valor', type: 'text', nullable: true)]
+    #[Groups('entity')]
     public ?string $valor = null;
 
     /**
-     * @ORM\Column(name="is_json", type="boolean", nullable=false)
-     * @Groups("entity")
      *
      * @var bool|null
      */
+    #[ORM\Column(name: 'is_json', type: 'boolean', nullable: false)]
+    #[Groups('entity')]
     public ?bool $isJson = false;
 
     /**
      * @var string
-     * @ORM\Column(name="app_uuid", type="string", nullable=false, length=36)
      * @NotUppercase()
-     * @Groups("entity")
      */
+    #[ORM\Column(name: 'app_uuid', type: 'string', nullable: false, length: 36)]
+    #[Groups('entity')]
     public ?string $appUUID = null;
 
     public function __construct(?string $chave = null, ?string $appUUID = null)

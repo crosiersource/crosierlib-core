@@ -51,42 +51,42 @@ class EntMenuLocator implements EntityId
     use EntityIdTrait;
 
     /**
-     * @ORM\Column(name="menu_uuid", type="string", nullable=false, length=36)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var null|string
      */
+    #[ORM\Column(name: 'menu_uuid', type: 'string', nullable: false, length: 36)]
+    #[Groups('entity')]
     public ?string $menuUUID = null;
 
     /**
      *
-     * @ORM\Column(name="url_regexp", type="string", nullable=false, length=2000)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var null|string
      */
+    #[ORM\Column(name: 'url_regexp', type: 'string', nullable: false, length: 2000)]
+    #[Groups('entity')]
     public ?string $urlRegexp = null;
 
     /**
      *
-     * @ORM\Column(name="nao_contendo", type="string")
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var null|string
      */
+    #[ORM\Column(name: 'nao_contendo', type: 'string')]
+    #[Groups('entity')]
     public ?string $naoContendo = null;
 
     /**
      *
-     * @ORM\Column(name="quem", type="string", nullable=false, length=2000)
      * @NotUppercase()
-     * @Groups("entity")
      *
      * @var null|string
      */
+    #[ORM\Column(name: 'quem', type: 'string', nullable: false, length: 2000)]
+    #[Groups('entity')]
     public ?string $quem = null;
 
     

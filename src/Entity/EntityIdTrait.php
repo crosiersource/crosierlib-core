@@ -15,54 +15,51 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait EntityIdTrait
 {
 
-    /**
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="bigint")
-     * @Groups("entityId")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'bigint')]
+    #[Groups('entityId')]
     private ?int $id = null;
 
     /**
      *
-     * @ORM\Column(name="inserted", type="datetime", nullable=false)
-     * @Assert\Type("\DateTime")
-     * @Groups("entityId")
      *
      * @var null|\DateTime
      */
+    #[ORM\Column(name: 'inserted', type: 'datetime', nullable: false)]
+    #[Assert\Type('\DateTime')]
+    #[Groups('entityId')]
     private ?\DateTime $inserted = null;
 
     /**
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     * @Assert\Type("\DateTime")
-     * @Groups("entityId")
      *
      * @var null|\DateTime
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
+    #[Assert\Type('\DateTime')]
+    #[Groups('entityId')]
     private ?\DateTime $updated = null;
 
     /**
-     * @ORM\Column(name="estabelecimento_id", type="bigint", nullable=false)
-     * @Groups("entityId")
      * @var null|string
      */
+    #[ORM\Column(name: 'estabelecimento_id', type: 'bigint', nullable: false)]
+    #[Groups('entityId')]
     private ?string $estabelecimentoId = null;
 
     /**
-     * @ORM\Column(name="user_inserted_id", type="bigint", nullable=false)
-     * @Groups("entityId")
      * @var null|string
      */
+    #[ORM\Column(name: 'user_inserted_id', type: 'bigint', nullable: false)]
+    #[Groups('entityId')]
     private ?string $userInsertedId = null;
 
     /**
-     * @ORM\Column(name="user_updated_id", type="bigint", nullable=false)
-     * @Groups("entityId")
      * @var null|string
      */
+    #[ORM\Column(name: 'user_updated_id', type: 'bigint', nullable: false)]
+    #[Groups('entityId')]
     private ?string $userUpdatedId = null;
 
     /**
