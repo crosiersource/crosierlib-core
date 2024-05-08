@@ -19,6 +19,13 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Repository/FilterData.php'
+
+    CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor:
+        arguments:
+            $container: '@service_container'
+        tags:
+            - { name: 'api_platform.state_processor' }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

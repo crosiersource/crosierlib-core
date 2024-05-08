@@ -8,9 +8,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\EntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
 use CrosierSource\CrosierLibCoreBundle\Repository\Security\GroupRepository;
+use CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -49,17 +51,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @author Carlos Eduardo Pauluk
  */
 #[ORM\Entity(repositoryClass: GroupRepository::class)]
+#[ORM\Table(name: 'sec_group')]
 #[ApiResource(
 	operations: [
-		new Get(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
-		new GetCollection(uriTemplate: '/sec/group', security: "is_granted('ROLE_ADMIN')"),
-		new Post(uriTemplate: '/sec/group', security: "is_granted('ROLE_ADMIN')"),
-		new Put(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
-		new Delete(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
+		new Get(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
+		new GetCollection(uriTemplate: '/sec/group'),
+		new Post(uriTemplate: '/sec/group'),
+		new Put(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
+		new Delete(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
 	],
 	normalizationContext: ['groups' => ['group', 'role', 'entityId'], 'enable_max_depth' => true],
 	denormalizationContext: ['groups' => ['group'], 'enable_max_depth' => true],
+	processor: EntityHandlerStateProcessor::class,
 )]
+#[EntityHandler(entityHandlerClass:"CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler")]
 class Group implements EntityId
 {
 
@@ -71,6 +76,8 @@ class Group implements EntityId
 	 * @var null|string
 	 * @Groups("group")
 	 */
+	#[ORM\Column(name: 'groupname', type: 'string', length: 90, unique: true)]
+	#[Groups(['group'])]
 	public ?string $groupname = null;
 
 	/**

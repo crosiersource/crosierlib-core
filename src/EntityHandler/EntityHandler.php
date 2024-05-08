@@ -263,7 +263,7 @@ abstract class EntityHandler implements EntityHandlerInterface
             /** @var EntityId $entityId */
             $this->handleUppercaseFields($entityId);
             if (!$entityId->getId()) {
-                $entityId->setInserted(new \DateTime('now'));
+                $entityId->setInserted(new \DateTimeImmutable('now'));
             }
             $entityId->setUpdated(new \DateTime('now'));
             if ($this->security->getUser()) {

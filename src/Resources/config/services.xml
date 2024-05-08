@@ -4,5 +4,16 @@
 		   xsi:schemaLocation="http://symfony.com/schema/dic/services
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-	<services></services>
+	<services>
+
+		<!-- EntityHandlerStateProcessor -->
+		<service id="crosier_source.crosier_lib_base_bundle.state_processor.entity_handler_state_processor"
+				 class="CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor">
+			<argument type="service" id="service_container"/>
+			<tag name="api_platform.state_processor"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor"
+				 alias="crosier_source.crosier_lib_base_bundle.state_processor.entity_handler_state_processor"/>
+
+	</services>
 </container>

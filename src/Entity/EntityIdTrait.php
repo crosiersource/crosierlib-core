@@ -22,7 +22,7 @@ trait EntityIdTrait
 	#[Groups("entityId")]
 	private ?\DateTimeImmutable $inserted = null;
 
-	#[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
+	#[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: false)]
 	#[Groups("entityId")]
 	private ?\DateTime $updated = null;
 
