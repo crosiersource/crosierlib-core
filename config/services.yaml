@@ -22,8 +22,6 @@ services:
             - '../src/Repository/FilterData.php'
 
     CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor:
-        arguments:
-            $container: '@service_container'
         tags:
             - { name: 'api_platform.state_processor' }
 

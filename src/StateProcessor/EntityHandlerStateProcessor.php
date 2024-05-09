@@ -9,14 +9,12 @@ use CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-final class EntityHandlerStateProcessor implements ProcessorInterface
+final class EntityHandlerStateProcessor implements ProcessorInterface, ServiceSubscriberInterface
 {
 
-	private ContainerInterface $container;
-
-	public function __construct(ContainerInterface $container)
+	public function __construct(private ContainerInterface $container)
 	{
-		$container->get(GroupEntityHandler::class);
+		// $container->get(GroupEntityHandler::class);
 		$oi = 1;
 	}
 
@@ -49,7 +47,7 @@ final class EntityHandlerStateProcessor implements ProcessorInterface
 //			}
 //		}
 //		return $classes;
-		return [];
+		return [GroupEntityHandler::class];
 	}
 
 }
