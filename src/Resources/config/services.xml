@@ -16,6 +16,16 @@
 				 alias="crosier_source.crosier_lib_core_bundle.state_processor.entity_handler_state_processor" public="true" />
 
 
+		<!-- UppercaseFieldsJsonBuilderCommand -->
+		<service id="crosier_source.crosier_lib_core_bundle.command.core.uppercase_fields_json_builder_command"
+				 class="CrosierSource\CrosierLibCoreBundle\Command\Core\UppercaseFieldsJsonBuilderCommand">
+			<argument type="service" id="doctrine.orm.default_entity_manager"/>
+			<argument type="service" id="monolog.logger"/>
+			<tag name="console.command"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\Command\Core\UppercaseFieldsJsonBuilderCommand"
+				 alias="crosier_source.crosier_lib_core_bundle.command.core.uppercase_fields_json_builder_command" public="true" />
+
 		<!-- SyslogBusiness -->
 		<service id="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"
 				 class="CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness">

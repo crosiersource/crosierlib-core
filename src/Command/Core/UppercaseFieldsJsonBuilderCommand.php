@@ -1,6 +1,6 @@
 <?php
 
-namespace CrosierSource\CrosierLibCoreBundle\Command\Base;
+namespace CrosierSource\CrosierLibCoreBundle\Command\Core;
 
 use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\NotUppercase;
 use Doctrine\Common\Annotations\AnnotationReader;
