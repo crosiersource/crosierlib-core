@@ -9,7 +9,7 @@ use CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-final class EntityHandlerStateProcessor implements ProcessorInterface, ServiceSubscriberInterface
+class EntityHandlerStateProcessor implements ProcessorInterface, ServiceSubscriberInterface
 {
 
 	public function __construct(private ContainerInterface $container)

@@ -15,5 +15,39 @@
 		<service id="CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor"
 				 alias="crosier_source.crosier_lib_core_bundle.state_processor.entity_handler_state_processor" public="true" />
 
+
+		<!-- SyslogBusiness -->
+		<service id="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"
+				 class="CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness">
+			<argument type="service" id="doctrine"/>
+			<argument type="service" id="security.helper"/>
+			<argument type="service" id="monolog.logger"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness"
+				 alias="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"/>
+
+		<!-- EntityHandler -->
+		<service id="crosier_source.crosier_lib_core_bundle.entity_handler.entity_handler"
+				 class="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler">
+			<argument type="service" id="doctrine"/>
+			<argument type="service" id="security.helper"/>
+			<argument type="service" id="parameter_bag"/>
+			<argument type="service" id="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler"
+				 alias="crosier_source.crosier_lib_core_bundle.entity_handler.entity_handler"/>
+
+
+		<!-- GroupEntityHandler -->
+		<service id="crosier_source.crosier_lib_core_bundle.entity_handler.security.group_entity_handler"
+				 class="CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler"
+				 parent="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler">
+			<argument type="service" id="doctrine"/>
+			<argument type="service" id="security.helper"/>
+			<argument type="service" id="parameter_bag"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler"
+				 alias="crosier_source.crosier_lib_core_bundle.entity_handler.security.group_entity_handler" public="true"/>
+
 	</services>
 </container>
