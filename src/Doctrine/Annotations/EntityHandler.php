@@ -12,6 +12,11 @@ class EntityHandler
 
 	private string $entityHandlerClass;
 
+	public function __construct(string $entityHandlerClass)
+	{
+		$this->entityHandlerClass = $entityHandlerClass;
+	}
+
 	public function getEntityHandlerClass(): string
 	{
 		return $this->entityHandlerClass;

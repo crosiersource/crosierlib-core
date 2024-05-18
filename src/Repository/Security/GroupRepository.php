@@ -6,8 +6,6 @@ use CrosierSource\CrosierLibCoreBundle\Entity\Security\Group;
 use CrosierSource\CrosierLibCoreBundle\Repository\FilterRepository;
 
 /**
- * RepositoryUtils para a entidade Group.
- *
  * @author Carlos Eduardo Pauluk
  */
 class GroupRepository extends FilterRepository
