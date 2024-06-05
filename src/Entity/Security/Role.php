@@ -46,4 +46,15 @@ class Role implements EntityId
 	#[Groups('role')]
 	public ?string $descricao = null;
 
+	public function getRole(): ?string
+	{
+		return $this->role;
+	}
+
+	public function setRole(?string $role): void
+	{
+		$this->role = $role;
+	}
+
+
 }

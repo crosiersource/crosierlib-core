@@ -1,0 +1,9 @@
+{
+  "name": "crosierlib-core",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "repository": "git@github.com:crosiersource/crosierlib-core.git",
+  "author": "Carlos Eduardo Pauluk <carlospauluk@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
