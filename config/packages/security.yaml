@@ -26,15 +26,18 @@ security:
         api:
             pattern: ^/api
             stateless: true
+            entry_point: jwt
             jwt: ~
+            refresh_jwt:
+                check_path: /api/token/refresh
+                provider: users
 
 
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/sec/user/recuperaSenha/*, roles: PUBLIC_ACCESS }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api(?:$|(?=\?)), roles: PUBLIC_ACCESS }
         #- { path: ^/api,       roles: PUBLIC_ACCESS }
         - { path: ^/nosec,     roles: PUBLIC_ACCESS }
