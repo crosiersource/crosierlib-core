@@ -1,13 +1,19 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
+
     formats:
         jsonld: ['application/ld+json']
     docs_formats:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
+    collection:
+        pagination:
+            page_parameter_name: page
+            items_per_page_parameter_name: rows
     defaults:
+        pagination_client_items_per_page: true
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']

@@ -27,8 +27,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Table(name: 'sec_group')]
 #[ApiResource(
 	operations: [
-		new Get(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
-		new GetCollection(uriTemplate: '/sec/group'),
+		new Get(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
+		new GetCollection(uriTemplate: '/sec/group', security: "is_granted('ROLE_ADMIN')"),
 		new Post(uriTemplate: '/sec/group'),
 		new Put(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
 		new Delete(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
@@ -37,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 	denormalizationContext: ['groups' => ['group'], 'enable_max_depth' => true],
 )]
 #[EntityHandler(entityHandlerClass: "CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler")]
-#[ApiFilter(SearchFilter::class, properties: ['groupname' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'groupname' => 'partial'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'groupname', 'updated'], arguments: ['orderParameterName' => 'order'])]
 class Group implements EntityId
 {
@@ -54,13 +54,30 @@ class Group implements EntityId
 	#[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', unique: true)]
 	#[ORM\ManyToMany(targetEntity: Role::class)]
 	#[Groups(['group'])]
-	public Collection $roles;
+	private Collection $roles;
 
 
 
 	public function __construct()
 	{
 		$this->roles = new ArrayCollection();
+	}
+
+	public function setRoles($roles): void
+	{
+		if (is_array($roles))
+			$this->roles = new ArrayCollection($roles);
+		else
+			$this->roles = $roles;
+	}
+
+	public function getRoles(): array
+	{
+		$roles = array();
+		foreach ($this->roles as $role) {
+			$roles[] = $role;
+		}
+		return $roles;
 	}
 
 

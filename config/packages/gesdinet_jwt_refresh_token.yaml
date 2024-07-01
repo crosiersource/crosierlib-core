@@ -1,2 +1,5 @@
 gesdinet_jwt_refresh_token:
     refresh_token_class: CrosierSource\CrosierLibCoreBundle\Entity\RefreshToken
+    ttl_update: true
+    ttl: 86400
+    return_expiration: true
