@@ -36,7 +36,7 @@ class PreUpdateListener
 
     public function preUpdate(PreUpdateEventArgs $args)
     {
-        if (!($_SERVER['DATABASE_LOGS_URL'] ?? false)) return;
+        return;
         /** @var EntityId $entity */
         $entity = $args->getObject();
 

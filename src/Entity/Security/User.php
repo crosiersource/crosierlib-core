@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[AllowDynamicProperties] #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'sec_user')]
 #[ApiResource(
 	operations: [
@@ -39,6 +39,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[EntityHandler(entityHandlerClass: EntityHandler::class)]
 #[ApiFilter(SearchFilter::class, properties: ['username' => 'partial', 'nome' => 'partial', 'email' => 'partial'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'username', 'nome', 'updated', 'isActive'], arguments: ['orderParameterName' => 'order'])]
+#[AllowDynamicProperties]
 class User implements EntityId, UserInterface, \Serializable, PasswordAuthenticatedUserInterface
 {
 	use EntityIdTrait;
@@ -105,13 +106,21 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 		$this->userRoles = new ArrayCollection();
 	}
 
-	public function getRoles(): array
+	public function setUserRoles($userRoles): void
 	{
-		$roles = array();
-		foreach ($this->userRoles as $role) {
-			$roles[] = $role->getRole();
+		if (is_array($userRoles))
+			$this->userRoles = new ArrayCollection($userRoles);
+		else
+			$this->userRoles = $userRoles;
+	}
+
+	public function getUserRoles(): array
+	{
+		$userRoles = array();
+		foreach ($this->userRoles as $userRole) {
+			$userRoles[] = $userRole;
 		}
-		return $roles;
+		return $userRoles;
 	}
 
 	public function addRole(Role $role): static
@@ -188,4 +197,11 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 			'allowed_classes' => false
 		]);
 	}
+
+	public function getRoles(): array
+	{
+		return $this->getUserRoles();
+	}
+
+
 }

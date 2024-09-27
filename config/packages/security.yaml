@@ -41,6 +41,7 @@ security:
         - { path: ^/api(?:$|(?=\?)), roles: PUBLIC_ACCESS }
         #- { path: ^/api,       roles: PUBLIC_ACCESS }
         - { path: ^/nosec,     roles: PUBLIC_ACCESS }
+        - { path: ^/hello-world,     roles: PUBLIC_ACCESS }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

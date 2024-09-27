@@ -1,19 +1,13 @@
 <?php
 
-namespace CrosierSource\CrosierLibCoreBundle\Business\Config;
+namespace CrosierSource\CrosierLibCoreBundle\Business\Syslog;
 
 use CrosierSource\CrosierLibCoreBundle\Utils\StringUtils\StringUtils;
-use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-/**
- * @author Carlos Eduardo Pauluk
- */
 class SyslogBusiness
 {
-
-    private ManagerRegistry $doctrine;
 
     private Security $security;
 
@@ -32,11 +26,9 @@ class SyslogBusiness
 
 
     public function __construct(
-        ManagerRegistry $doctrine,
         Security        $security,
         LoggerInterface $logger)
     {
-        $this->doctrine = $doctrine;
         $this->security = $security;
         $this->logger = $logger;
         $this->uuidSess = StringUtils::guidv4();
@@ -144,37 +136,31 @@ class SyslogBusiness
             return;
         }
         try {
-            if ($tipo === 'err' || $this->logToo || ($_SERVER['SYSLOG_LOGTOO'] ?? false)) {
-                $msg = $this->uuidSess . ' - ' . $action;
-                $msg .= '[' . $component . '] ';
-                $msg .= '[username: ' . $username . '] ';
-                switch ($tipo) {
-                    case 'info':
-                        $this->logger->info($msg);
-                        break;
-                    case 'err':
-                        $this->logger->error($msg);
-                        break;
-                    case 'debug':
-                        $this->logger->debug($msg);
-                        break;
-                }
-            }
-            $app = $app ?? $this->getApp();
             $component = $component ?? $this->getComponent();
             $username = $username ?? ($this->security->getUser() ? $this->security->getUser()->getUsername() : null) ?? 'n/d';
-            $this->doctrine->getManager('logs')->getConnection()->insert('cfg_syslog', [
-                'uuid_sess' => $this->uuidSess,
-                'tipo' => $tipo,
-                'app' => $app,
-                'component' => $component,
-                'act' => $action,
-                'obs' => $obs,
-                'username' => $username,
-                'moment' => (new \DateTime())->format('Y-m-d H:i:s'),
-                'delete_after' => $deleteAfter ? $deleteAfter->format('Y-m-d H:i:s') : null,
-                'json_data' => $jsonData ? json_encode($jsonData) : null
-            ]);
+
+            $msg = '[[[' . $this->ipReal() . ']]] ';
+            $msg .= '[[[' . $username . ']]] ';
+            $msg .= '[[[' . $component . ']]] ';
+            $msg .= '[[[' . $this->uuidSess . ']]] ' . $action . ' ';
+            $msg .= '[[[' . $obs . ']]] ';
+            $msg .= '[[[' . ($_SERVER['CROSIERAPP_ID'] ?? 'n/d') . ']]]';
+
+            switch ($tipo) {
+                case 'info':
+                    $this->logger->info($msg);
+                    break;
+                case 'err':
+                    $this->logger->error($msg);
+                    break;
+                case 'debug':
+                    $this->logger->debug($msg);
+                    break;
+            }
+
+
+            $app = $app ?? $this->getApp();
+
             if ($this->echo) {
                 echo $tipo . ": " . $action . PHP_EOL;
                 if ($obs) {
@@ -184,6 +170,49 @@ class SyslogBusiness
         } catch (\Throwable $e) {
             $this->logger->error('erro ao gravar em cfg_syslog');
             $this->logger->error($e->getMessage());
+        }
+    }
+
+    public function entityChange(EntityChangeVo $entityChangeVo): void
+    {
+        if ($_SERVER['SYSLOG_DESABILITADO'] ?? false) {
+            return;
+        }
+        try {
+            $msg = 'ENTITY_CHANGE:';
+            $msg .= ' [[[' . $entityChangeVo->entityClass . ']]]';
+            $msg .= ' [[[' . $entityChangeVo->entityId . ']]]';
+            $msg .= ' [[[' . $entityChangeVo->ip . ']]]';
+            $msg .= ' [[[' . $entityChangeVo->changingUserId . ']]]';
+            $msg .= ' [[[' . $entityChangeVo->changingUserUsername . ']]]';
+            $msg .= ' [[[' . $entityChangeVo->changes . ']]]';
+            $msg .= ' [[[' . ($_SERVER['CROSIERAPP_ID'] ?? 'n/d') . ']]]';
+
+            $this->logger->info($msg);
+
+            if ($this->echo) {
+                echo $msg;
+            }
+        } catch (\Throwable $e) {
+            $this->logger->error('erro ao logar o entityChange');
+            $this->logger->error($e->getMessage());
+        }
+    }
+
+    private function ipReal(): string
+    {
+        if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+            return $_SERVER["HTTP_CLIENT_IP"];
+        } elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+            return $_SERVER["HTTP_X_FORWARDED_FOR"];
+        } elseif (isset($_SERVER["HTTP_X_FORWARDED"])) {
+            return $_SERVER["HTTP_X_FORWARDED"];
+        } elseif (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
+            return $_SERVER["HTTP_FORWARDED_FOR"];
+        } elseif (isset($_SERVER["HTTP_FORWARDED"])) {
+            return $_SERVER["HTTP_FORWARDED"];
+        } else {
+            return $_SERVER["REMOTE_ADDR"] ?? 'n/d';
         }
     }
 

@@ -7,8 +7,8 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 
-#[AsDoctrineListener(event: Events::preUpdate, priority: 0, connection: 'default')]
-#[AsDoctrineListener(event: Events::prePersist, priority: 0, connection: 'default')]
+//#[AsDoctrineListener(event: Events::preUpdate, priority: 0, connection: 'default')]
+//#[AsDoctrineListener(event: Events::prePersist, priority: 0, connection: 'default')]
 class LifecycleEventListener
 {
 

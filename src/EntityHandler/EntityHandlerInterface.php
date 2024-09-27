@@ -38,7 +38,7 @@ interface EntityHandlerInterface
      * @return EntityId|object
      * @throws ViewException
      */
-    public function save(EntityId $entityId, $flush = true);
+    // public function save(EntityId $entityId, $flush = true);
 
     /**
      * Executado após o save().

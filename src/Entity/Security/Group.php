@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Put;
 use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\EntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
+use CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Repository\Security\GroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -36,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 	normalizationContext: ['groups' => ['group', 'role', 'entityId'], 'enable_max_depth' => true],
 	denormalizationContext: ['groups' => ['group'], 'enable_max_depth' => true],
 )]
-#[EntityHandler(entityHandlerClass: "CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler")]
+#[EntityHandler(entityHandlerClass: GroupEntityHandler::class)]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'groupname' => 'partial'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'groupname', 'updated'], arguments: ['orderParameterName' => 'order'])]
 class Group implements EntityId
@@ -55,7 +56,6 @@ class Group implements EntityId
 	#[ORM\ManyToMany(targetEntity: Role::class)]
 	#[Groups(['group'])]
 	private Collection $roles;
-
 
 
 	public function __construct()

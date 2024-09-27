@@ -13,7 +13,10 @@ class HelloWorldController extends AbstractController
 	#[Route('/hello-world', name: 'hello_world')]
 	public function index(): Response
 	{
-		return new Response('Hello World!');
+		phpinfo();
+		return $this->render('hello_world/index.html.twig', [
+			'controller_name' => 'HelloWorldController',
+		]);
 	}
 
 }
