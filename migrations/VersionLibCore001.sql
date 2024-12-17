@@ -225,20 +225,18 @@ CREATE TABLE `cfg_app_config`
 
 
 
-DROP TABLE IF EXISTS `cfg_entmenu`;
+DROP TABLE IF EXISTS `cfg_menu_item`;
 
-CREATE TABLE `cfg_entmenu`
+CREATE TABLE `cfg_menu_item`
 (
 	`id`                 bigint(20) AUTO_INCREMENT NOT NULL,
-	`uuid`               char(36)                  NOT NULL,
-	`app_uuid`           char(36)                  NOT NULL,
 	`label`              varchar(255)              NOT NULL,
 	`icon`               varchar(50),
 	`tipo`               varchar(50)               NOT NULL,
-	`pai_uuid`           char(36),
+	`pai_id`             bigint(20),
 	`ordem`              int(11)                   NOT NULL,
 	`css_style`          varchar(2000),
-	`url`                varchar(2000),
+	`url`                varchar(500),
 	`roles`              varchar(2000),
 
 	`inserted`           datetime                  NOT NULL,
@@ -247,59 +245,19 @@ CREATE TABLE `cfg_entmenu`
 	`user_inserted_id`   bigint(20)                NOT NULL,
 	`user_updated_id`    bigint(20)                NOT NULL,
 
-	UNIQUE KEY `UK_cfg_entmenu_uuid` (`uuid`),
+	UNIQUE KEY `UK_cfg_menu_item_label_url` (`label`, `url`),
 
-	KEY `K_cfg_entmenu_pai` (`pai_uuid`),
-	CONSTRAINT `FK_cfg_entmenu_pai` FOREIGN KEY (`pai_uuid`) REFERENCES `cfg_entmenu` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE,
-
-	KEY `K_cfg_entmenu_app` (`app_uuid`),
-	CONSTRAINT `FK_cfg_entmenu_app` FOREIGN KEY (`app_uuid`) REFERENCES `cfg_app` (`uuid`),
+	KEY `K_cfg_menu_item_pai` (`pai_id`),
+	CONSTRAINT `FK_cfg_menu_item_pai` FOREIGN KEY (`pai_id`) REFERENCES `cfg_menu_item` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
 
 	PRIMARY KEY (`id`),
 
-	KEY `K_cfg_entmenu_estabelecimento` (`estabelecimento_id`),
-	KEY `K_cfg_entmenu_user_inserted` (`user_inserted_id`),
-	KEY `K_cfg_entmenu_user_updated` (`user_updated_id`),
-	CONSTRAINT `FK_cfg_entmenu_estabelecimento` FOREIGN KEY (`estabelecimento_id`) REFERENCES `cfg_estabelecimento` (`id`),
-	CONSTRAINT `FK_cfg_entmenu_user_inserted` FOREIGN KEY (`user_updated_id`) REFERENCES `sec_user` (`id`),
-	CONSTRAINT `FK_cfg_entmenu_user_updated` FOREIGN KEY (`user_inserted_id`) REFERENCES `sec_user` (`id`)
-) DEFAULT CHARACTER SET utf8mb4
-  COLLATE `utf8mb4_unicode_ci`
-  ENGINE = InnoDB;
-
-
-
-DROP TABLE IF EXISTS `cfg_entmenu_locator`;
-
-CREATE TABLE `cfg_entmenu_locator`
-(
-	`id`                 bigint(20) AUTO_INCREMENT NOT NULL,
-
-	`menu_uuid`          char(36)                  NOT NULL,
-	`url_regexp`         varchar(300)              NOT NULL,
-	`quem`               varchar(300)              NOT NULL,
-	`nao_contendo`       varchar(3000),
-
-	`inserted`           datetime                  NOT NULL,
-	`updated`            datetime                  NOT NULL,
-	`estabelecimento_id` bigint(20)                NOT NULL,
-	`user_inserted_id`   bigint(20)                NOT NULL,
-	`user_updated_id`    bigint(20)                NOT NULL,
-
-	KEY `K_cfg_entmenu_locator_menu` (`menu_uuid`),
-	CONSTRAINT `FK_cfg_entmenu_locator_menu` FOREIGN KEY (`menu_uuid`) REFERENCES `cfg_entmenu` (`uuid`),
-
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `UK_cfg_entmenu_locator` (`menu_uuid`, `url_regexp`, `quem`),
-
-	KEY `K_cfg_entmenu_locator_estabelecimento` (`estabelecimento_id`),
-	KEY `K_cfg_entmenu_locator_user_inserted` (`user_inserted_id`),
-	KEY `K_cfg_entmenu_locator_user_updated` (`user_updated_id`),
-
-
-	CONSTRAINT `FK_cfg_entmenu_locator_estabelecimento` FOREIGN KEY (`estabelecimento_id`) REFERENCES `cfg_estabelecimento` (`id`),
-	CONSTRAINT `FK_cfg_entmenu_locator_user_inserted` FOREIGN KEY (`user_updated_id`) REFERENCES `sec_user` (`id`),
-	CONSTRAINT `FK_cfg_entmenu_locator_user_updated` FOREIGN KEY (`user_inserted_id`) REFERENCES `sec_user` (`id`)
+	KEY `K_cfg_menu_item_estabelecimento` (`estabelecimento_id`),
+	KEY `K_cfg_menu_item_user_inserted` (`user_inserted_id`),
+	KEY `K_cfg_menu_item_user_updated` (`user_updated_id`),
+	CONSTRAINT `FK_cfg_menu_item_estabelecimento` FOREIGN KEY (`estabelecimento_id`) REFERENCES `cfg_estabelecimento` (`id`),
+	CONSTRAINT `FK_cfg_menu_item_user_inserted` FOREIGN KEY (`user_updated_id`) REFERENCES `sec_user` (`id`),
+	CONSTRAINT `FK_cfg_menu_item_user_updated` FOREIGN KEY (`user_inserted_id`) REFERENCES `sec_user` (`id`)
 ) DEFAULT CHARACTER SET utf8mb4
   COLLATE `utf8mb4_unicode_ci`
   ENGINE = InnoDB;
@@ -342,29 +300,39 @@ TRUNCATE TABLE sec_group_role;
 TRUNCATE TABLE sec_user_role;
 
 
-INSERT INTO cfg_estabelecimento(id, codigo, descricao, concreto, pai_id, updated, inserted, user_inserted_id, user_updated_id, estabelecimento_id)
+INSERT INTO cfg_estabelecimento(id, codigo, descricao, concreto, pai_id, updated, inserted, user_inserted_id,
+								user_updated_id, estabelecimento_id)
 VALUES (1, 1, 'ADMIN', true, null, now(), now(), 1, 1, 1);
 
 
 -- Senha padrão: admin@123
-INSERT INTO sec_user(id, username, nome, email, password, ativo, group_id, estabelecimento_id, updated, inserted, user_inserted_id, user_updated_id)
-VALUES (1, 'admin', 'Admin', 'admin@email.com', '$argon2id$v=19$m=65536,t=4,p=1$3mj2TxDtNWJsp0EkjC0bDQ$0L8SC83i3cmjGfYxet7DkmzA+/wsWUp09Yg9l7qNcBk', true, 1, 1, now(), now(), 1, 1);
+INSERT INTO sec_user(id, username, nome, email, password, ativo, group_id, estabelecimento_id, updated, inserted,
+					 user_inserted_id, user_updated_id)
+VALUES (1, 'admin', 'Admin', 'admin@email.com',
+		'$argon2id$v=19$m=65536,t=4,p=1$3mj2TxDtNWJsp0EkjC0bDQ$0L8SC83i3cmjGfYxet7DkmzA+/wsWUp09Yg9l7qNcBk', true, 1, 1,
+		now(), now(), 1, 1);
 
-INSERT INTO sec_user(id, username, nome, email, password, ativo, group_id, estabelecimento_id, updated, inserted, user_inserted_id, user_updated_id, api_token, api_token_expires_at)
-VALUES (2, 'uploader', 'UPLOADER', 'upload@crosier.com.br', '', false, 1, 1, now(), now(), 1, 1, '999999', '2900-12-31');
+INSERT INTO sec_user(id, username, nome, email, password, ativo, group_id, estabelecimento_id, updated, inserted,
+					 user_inserted_id, user_updated_id, api_token, api_token_expires_at)
+VALUES (2, 'uploader', 'UPLOADER', 'upload@crosier.com.br', '', false, 1, 1, now(), now(), 1, 1, '999999',
+		'2900-12-31');
 
 
-
+-- admin@123
 INSERT INTO sec_group(id, groupname, estabelecimento_id, updated, inserted, user_inserted_id, user_updated_id)
 VALUES (1, 'ADMIN', 1, now(), now(), 1, 1);
 
 INSERT INTO sec_role(id, role, descricao, estabelecimento_id, updated, inserted, user_inserted_id, user_updated_id)
 VALUES (null, 'ROLE_ADMIN', 'Usuário "root" do sistema', 1, now(), now(), 1, 1),
-	   (null, 'ROLE_ALLOWED_TO_SWITCH', 'Permite que o usuário alterne para qualquer outro usuário do sistema', 1, now(), now(), 1, 1),
+	   (null, 'ROLE_ALLOWED_TO_SWITCH', 'Permite que o usuário alterne para qualquer outro usuário do sistema', 1,
+		now(), now(), 1, 1),
 	   (null, 'ROLE_UPLOAD', 'Permissão para enviar arquivos através da API de upload', 1, now(), now(), 1, 1),
-	   (null, 'ROLE_ENTITY_CHANGES', 'Pode visualizar os registros de alterações das entidades.', 1, now(), now(), 1, 1),
-	   (null, 'ROLE_NENHUMA', 'Role sem efeito (serve apenas para poder deixar um usuário com apenas 1 role).', 1, now(), now(), 1, 1),
-	   (null, 'ROLE_ALLOWED_TO_SWITCH_IF_SAME_EMAIL', 'Permite que o usuário alterne entre outros usuários que possuam o mesmo e-mail.', 1, now(), now(), 1, 1);
+	   (null, 'ROLE_ENTITY_CHANGES', 'Pode visualizar os registros de alterações das entidades.', 1, now(), now(), 1,
+		1),
+	   (null, 'ROLE_NENHUMA', 'Role sem efeito (serve apenas para poder deixar um usuário com apenas 1 role).', 1,
+		now(), now(), 1, 1),
+	   (null, 'ROLE_ALLOWED_TO_SWITCH_IF_SAME_EMAIL',
+		'Permite que o usuário alterne entre outros usuários que possuam o mesmo e-mail.', 1, now(), now(), 1, 1);
 
 INSERT INTO sec_group_role(group_id, role_id)
 VALUES (1, 1);
@@ -381,8 +349,10 @@ DELETE
 FROM cfg_app
 WHERE uuid = '175bd6d3-6c29-438a-9520-47fcee653cc5';
 
-INSERT INTO `cfg_app` (`id`, `uuid`, `inserted`, `updated`, `nome`, `obs`, `estabelecimento_id`, `user_inserted_id`, `user_updated_id`)
-VALUES (1, '175bd6d3-6c29-438a-9520-47fcee653cc5', '1900-01-01 00:00:00', '1900-01-01 00:00:00', 'crosier-core', 'Núcleo do Crosier', 1, 1, 1);
+INSERT INTO `cfg_app` (`id`, `uuid`, `inserted`, `updated`, `nome`, `obs`, `estabelecimento_id`, `user_inserted_id`,
+					   `user_updated_id`)
+VALUES (1, '175bd6d3-6c29-438a-9520-47fcee653cc5', '1900-01-01 00:00:00', '1900-01-01 00:00:00', 'crosier-core',
+		'Núcleo do Crosier', 1, 1, 1);
 
 
 DELETE

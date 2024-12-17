@@ -49,39 +49,45 @@ abstract class EntityHandler implements EntityHandlerInterface
 	protected bool $salvouLogInsert = false;
 
 
+	private function validEntity($args): bool
+	{
+		return $args->getObject() instanceof EntityId &&
+			$this->getEntityClass() === get_class($args->getObject());
+	}
+
 	public function prePersist(PrePersistEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->preSave($args->getObject());
 	}
 
 	public function postPersist(PostPersistEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->postSave($args->getObject());
 	}
 
 	public function preUpdate(PreUpdateEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->preSave($args->getObject());
 	}
 
 	public function postUpdate(PostUpdateEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->postSave($args->getObject());
 	}
 
 	public function preRemove(PreRemoveEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->beforeDelete($args->getObject());
 	}
 
 	public function postRemove(PostRemoveEventArgs $args): void
 	{
-		if (!$args->getObject() instanceof EntityId) return;
+		if (!$this->validEntity($args)) return;
 		$this->afterDelete($args->getObject());
 	}
 
@@ -234,41 +240,9 @@ abstract class EntityHandler implements EntityHandlerInterface
 
 	public function postSave(EntityId $entityId): void
 	{
-		if ($this->shouldFlush) {
-			$this->doctrine->flush();
-		}
-
-		try {
-			if (!$this->salvouLogInsert && $this->isInserting && $entityId->getId()) {
-
-				$class = str_replace("\\", ":", get_class($entityId));
-
-				$entityChange = [
-					'entity_class' => $class,
-					'entity_id' => $entityId->getId(),
-					'changed_at' => $entityId->getUpdated()->format('Y-m-d H:i:s'),
-					'changes' => 'INSERINDO',
-				];
-
-				/** @var User $user */
-				$user = $this->security->getUser();
-
-				if (!$user) {
-					$entityChange['changing_user_id'] = 0;
-					$entityChange['changing_user_username'] = 'n/d';
-					$entityChange['changing_user_nome'] = 'n/d';
-				} else {
-					$entityChange['changing_user_id'] = $user->getUserInsertedId();
-					$entityChange['changing_user_username'] = $user->username;
-					$entityChange['changing_user_nome'] = $user->nome;
-				}
-
-				$this->managerRegistry->getManager('logs')->getConnection()->insert('cfg_entity_change', $entityChange);
-				$this->salvouLogInsert = true;
-			}
-		} catch (\Throwable $e) {
-			$this->syslog->err('Erro ao inserir em cfg_entity_change', $e->getMessage());
-		}
+//		if ($this->shouldFlush) {
+//			$this->doctrine->flush();
+//		}
 
 		$this->afterSave($entityId);
 
@@ -324,9 +298,9 @@ abstract class EntityHandler implements EntityHandlerInterface
 
 
 	/**
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Doctrine\DBAL\Exception
 	 */
-	protected function handleJsonMetadata()
+	protected function handleJsonMetadata(): void
 	{
 		$tableName = $this->doctrine->getClassMetadata($this->getEntityClass())->getTableName();
 

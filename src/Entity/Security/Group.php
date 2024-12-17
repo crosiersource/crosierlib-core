@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
 	operations: [
 		new Get(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
-		new GetCollection(uriTemplate: '/sec/group', security: "is_granted('ROLE_ADMIN')"),
+		new GetCollection(uriTemplate: '/sec/group'),//, security: "is_granted('ROLE_ADMIN')"),
 		new Post(uriTemplate: '/sec/group'),
 		new Put(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),
 		new Delete(uriTemplate: '/sec/group/{id}', requirements: ['id' => '\d+']),

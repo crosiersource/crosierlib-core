@@ -1,0 +1,13 @@
+menu_items:
+    -   "Início": ["/inicio", "fas fa-home"]
+    -   "Configurações":
+            icon: "fas fa-cogs"
+            filhos:
+                -   "Usuários": ["/configuracoes/usuarios", "fas fa-users"]
+                -   "Grupos de Usuários": "/configuracoes/grupos-usuarios"
+                -   "Menu":
+                        url: "/configuracoes/menu"
+                        cssStyle: "background-color: yellow;"
+                -   "Propriedades do Sistema":
+                        url: "/configuracoes/propriedades"
+                        roles: "ROLE_ADMIN,ROLE_SUPERADMIN"

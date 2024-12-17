@@ -17,6 +17,7 @@
 		"ext-iconv": "*",
 		"ext-intl": "*",
 		"ext-openssl": "*",
+		"ext-yaml": "*",
 		"api-platform/core": "^3.2",
 		"doctrine/annotations": "^2.0.1",
 		"doctrine/dbal": "^3",
