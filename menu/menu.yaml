@@ -1,13 +1,23 @@
 menu_items:
-    -   "Início": ["/inicio", "fas fa-home"]
+    -   "Início": [ "/inicio", "fas fa-home" ]
     -   "Configurações":
+            ordem: 99
             icon: "fas fa-cogs"
             filhos:
-                -   "Usuários": ["/configuracoes/usuarios", "fas fa-users"]
-                -   "Grupos de Usuários": "/configuracoes/grupos-usuarios"
+                -   "Usuários":
+                        icon: "fas fa-users"
+                        url: "/sec/usuario/list"
+                        roles: "ROLE_ADMIN"
+                -   "Grupos de Usuários":
+                        icon: "fas fa-users-cog"
+                        url: "/sec/grupo/list"
+                        roles: "ROLE_ADMIN"
                 -   "Menu":
-                        url: "/configuracoes/menu"
+                        icon: "fas fa-bars"
+                        url: "/cfg/menu"
                         cssStyle: "background-color: yellow;"
+                        roles: "ROLE_ADMIN"
                 -   "Propriedades do Sistema":
-                        url: "/configuracoes/propriedades"
-                        roles: "ROLE_ADMIN,ROLE_SUPERADMIN"
+                        icon: "fas fa-cog"
+                        url: "/cfg/app/list"
+                        roles: "ROLE_ADMIN"

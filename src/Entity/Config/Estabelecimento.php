@@ -34,7 +34,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiFilter(PropertyFilter::class)]
 #[ApiFilter(SearchFilter::class, properties: ['codigo' => 'exact', 'descricao' => 'partial', 'id' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'codigo', 'descricao', 'updated'], arguments: ['orderParameterName' => 'order'])]
-#[EntityHandler(entityHandlerClass: "CrosierSource\CrosierLibCoreBundle\EntityHandler\Config\EstabelecimentoEntityHandler")]
 class Estabelecimento implements EntityId
 {
 	use EntityIdTrait;

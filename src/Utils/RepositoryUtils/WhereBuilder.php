@@ -1,6 +1,6 @@
 <?php
 
-namespace CrosierSource\CrosierLibCoreBundle\Repository;
+namespace CrosierSource\CrosierLibCoreBundle\Utils\RepositoryUtils;
 
 use CrosierSource\CrosierLibCoreBundle\Exception\ViewException;
 use CrosierSource\CrosierLibCoreBundle\Utils\DateTimeUtils\DateTimeUtils;

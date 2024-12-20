@@ -11,7 +11,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\EntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
 use CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler;
@@ -37,7 +36,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 	normalizationContext: ['groups' => ['group', 'role', 'entityId'], 'enable_max_depth' => true],
 	denormalizationContext: ['groups' => ['group'], 'enable_max_depth' => true],
 )]
-#[EntityHandler(entityHandlerClass: GroupEntityHandler::class)]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'groupname' => 'partial'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'groupname', 'updated'], arguments: ['orderParameterName' => 'order'])]
 class Group implements EntityId

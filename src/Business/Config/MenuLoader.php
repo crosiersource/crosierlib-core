@@ -33,6 +33,7 @@ class MenuLoader
 				$menuItem = new MenuItem();
 				$menuItem->label = $label;
 				$menuItem->pai = $pai;
+				$ordem = $menuItem?->ordem ?? $data['ordem'] ?? $ordem;
 
 				$menuItem->tipo = 'ENT';
 				if (is_string($data)) {

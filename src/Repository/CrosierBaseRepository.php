@@ -1,7 +1,6 @@
 <?php
 
-namespace CrosierSource\CrosierLibCoreBundle\EntityHandler;
-
+namespace CrosierSource\CrosierLibCoreBundle\Repository;
 
 use CrosierSource\CrosierLibCoreBundle\Business\Syslog\SyslogBusiness;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
@@ -9,7 +8,6 @@ use CrosierSource\CrosierLibCoreBundle\Entity\Security\User;
 use CrosierSource\CrosierLibCoreBundle\Exception\ViewException;
 use CrosierSource\CrosierLibCoreBundle\Utils\DateTimeUtils\DateTimeUtils;
 use CrosierSource\CrosierLibCoreBundle\Utils\ExceptionUtils\ExceptionUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
@@ -17,28 +15,14 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Persistence\ManagerRegistry;
-use ReflectionClass;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * Classe abstrata responsável pela lógica ao salvar ou deletar entidades na base de dados.
- *
  * @author Carlos Eduardo Pauluk
  */
-// #[AsDoctrineListener(event: Events::prePersist, priority: 500, connection: 'default')]
-abstract class EntityHandler implements EntityHandlerInterface
+abstract class CrosierBaseRepository extends FilterRepository
 {
-
-	protected ManagerRegistry $managerRegistry;
-
-	protected EntityManagerInterface $doctrine;
-
-	protected Security $security;
-
-	protected ParameterBagInterface $parameterBag;
-
-	protected SyslogBusiness $syslog;
 
 	protected bool $isTransacionalSave = false;
 
@@ -49,10 +33,20 @@ abstract class EntityHandler implements EntityHandlerInterface
 	protected bool $salvouLogInsert = false;
 
 
+	public function __construct(
+		protected ManagerRegistry       $em,
+		string                          $entityClass,
+		protected Security              $security,
+		protected ParameterBagInterface $parameterBag,
+		protected SyslogBusiness        $syslog)
+	{
+		parent::__construct($em, $entityClass, $this->security, $this->parameterBag, $this->syslog);
+	}
+
 	private function validEntity($args): bool
 	{
-		return $args->getObject() instanceof EntityId &&
-			$this->getEntityClass() === get_class($args->getObject());
+		return $args->getObject() instanceof EntityId;
+		//&& $this->getEntityClass() === get_class($args->getObject());
 	}
 
 	public function prePersist(PrePersistEventArgs $args): void
@@ -91,48 +85,26 @@ abstract class EntityHandler implements EntityHandlerInterface
 		$this->afterDelete($args->getObject());
 	}
 
-	public function __construct(ManagerRegistry       $managerRegistry,
-								Security              $security,
-								ParameterBagInterface $parameterBag,
-								SyslogBusiness        $syslog)
-	{
-		$this->managerRegistry = $managerRegistry;
-		$this->doctrine = $managerRegistry->getManager();
-		$this->security = $security;
-		$this->parameterBag = $parameterBag;
-		$this->syslog = $syslog;
-	}
-
-	public function getDoctrine(): EntityManagerInterface
-	{
-		return $this->doctrine;
-	}
-
-
-	public abstract function getEntityClass();
 
 	/**
-	 * Executa o DELETE e o flush.
-	 *
-	 * @param $entityId
 	 * @throws ViewException
 	 */
-	public function delete($entityId)
+	public function delete($entityId): void
 	{
 		try {
 			if ($this->isTransacionalSave) {
-				$this->doctrine->beginTransaction();
+				$this->em->getManager()->beginTransaction();
 			}
 			$this->beforeDelete($entityId);
-			$this->doctrine->remove($entityId);
-			$this->doctrine->flush();
+			$this->em->getManager()->remove($entityId);
+			$this->em->getManager()->flush();
 			$this->afterDelete($entityId);
 			if ($this->isTransacionalSave) {
-				$this->doctrine->commit();
+				$this->em->getManager()->commit();
 			}
 		} catch (\Exception $e) {
 			if ($this->isTransacionalSave) {
-				$this->doctrine->rollback();
+				$this->em->getManager()->rollback();
 			}
 			$msg = ExceptionUtils::treatException($e);
 			throw new ViewException('Erro ao deletar' . ($msg ? ' (' . $msg . ')' : ''), 0, $e, $this->syslog);
@@ -141,30 +113,24 @@ abstract class EntityHandler implements EntityHandlerInterface
 
 
 	/**
-	 * Implementação vazia pois não é obrigatório.
-	 *
-	 * @param $entityId
+	 * Para ser sobreescrito (caso necessário).
 	 */
-	public function beforeDelete($entityId)
+	public function beforeDelete($entityId): void
 	{
 	}
 
 
 	/**
-	 * Implementação vazia pois não é obrigatório.
+	 * EntityId
 	 *
 	 * @param $entityId
 	 */
-	public function afterDelete($entityId)
+	public function afterDelete($entityId): void
 	{
 	}
 
 
-	/**
-	 * @param EntityId $e
-	 * @return EntityId
-	 */
-	public function cloneEntityId(EntityId $e)
+	public function cloneEntityId(EntityId $e): EntityId
 	{
 		$newE = clone $e;
 		$this->beforeClone($newE);
@@ -180,55 +146,49 @@ abstract class EntityHandler implements EntityHandlerInterface
 
 	/**
 	 * Copia o objeto removendo informações específicas.
-	 *
-	 * @param $e
-	 * @return EntityId|object
 	 * @throws ViewException
 	 */
-	public function doClone($e)
+	public function doClone(EntityId $e): EntityId
 	{
-		$this->getDoctrine()->beginTransaction();
+		$this->em->getManager()->beginTransaction();
 		$newE = $this->cloneEntityId($e);
 		$this->afterClone($newE, $e);
 		$this->save($newE);
-		$this->getDoctrine()->commit();
+		$this->em->getManager()->commit();
 		return $newE;
 	}
 
 
 	/**
-	 * Implementação vazia pois não é obrigatório.
-	 *
-	 * @param $entityId
+	 * Para ser sobreescrito (caso necessário).
 	 */
-	public function beforeClone($entityId)
+	public function beforeClone($entityId): void
 	{
 	}
 
 
 	/**
-	 * Implementação vazia pois não é obrigatório.
-	 *
-	 * @param $newEntityId
-	 * @param $oldEntityId
-	 * @throws ViewException
+	 * Para ser sobreescrito (caso necessário).
 	 */
-	public function afterClone($newEntityId, $oldEntityId)
+	public function afterClone($newEntityId, $oldEntityId): void
 	{
 	}
 
 
-	public function preSave(EntityId $entityId)
+	/**
+	 * @throws ViewException
+	 */
+	public function preSave(EntityId $entityId): EntityId
 	{
 		try {
 			if ($this->isTransacionalSave) {
-				$this->doctrine->beginTransaction();
+				$this->em->getManager()->beginTransaction();
 			}
 			$this->handleSavingEntityId($entityId);
 			$this->beforeSave($entityId);
 		} catch (\Throwable $e) {
 			if ($this->isTransacionalSave) {
-				$this->doctrine->rollback();
+				$this->em->getManager()->rollback();
 			}
 			$msg = ExceptionUtils::treatException($e);
 			$msg = $msg ? 'Erro ao salvar (' . $msg . ')' : 'Erro ao salvar';
@@ -241,24 +201,19 @@ abstract class EntityHandler implements EntityHandlerInterface
 	public function postSave(EntityId $entityId): void
 	{
 //		if ($this->shouldFlush) {
-//			$this->doctrine->flush();
+//			$this->em->getManager()->flush();
 //		}
 
 		$this->afterSave($entityId);
 
 		$this->handleJsonMetadata();
 		if ($this->isTransacionalSave) {
-			$this->doctrine->commit();
+			$this->em->getManager()->commit();
 		}
 		$this->posAfterSave($entityId);
 	}
 
 
-	/**
-	 * Implementação vazia pois não é obrigatório.
-	 *
-	 * @param $entityId
-	 */
 	public function handleSavingEntityId($entityId): void
 	{
 		try {
@@ -297,14 +252,11 @@ abstract class EntityHandler implements EntityHandlerInterface
 	}
 
 
-	/**
-	 * @throws \Doctrine\DBAL\Exception
-	 */
 	protected function handleJsonMetadata(): void
 	{
-		$tableName = $this->doctrine->getClassMetadata($this->getEntityClass())->getTableName();
+		$tableName = $this->em->getManager()->getClassMetadata($this->entityClass)->getTableName();
 
-		$conn = $this->getDoctrine()->getConnection();
+		$conn = $this->em->getManager()->getConnection();
 		$rConfig = $conn->fetchAllAssociative('SELECT * FROM cfg_app_config WHERE app_uuid = :appUUID AND chave = :chave', ['appUUID' => $_SERVER['CROSIERAPP_UUID'], 'chave' => $tableName . '_json_metadata']);
 
 		if ($rConfig) {
@@ -339,16 +291,13 @@ abstract class EntityHandler implements EntityHandlerInterface
 	}
 
 
-	/**
-	 * @param $entityId
-	 */
 	private function handleUppercaseFields($entityId): void
 	{
 		try {
 			$uppercaseFieldsJson = file_get_contents($this->parameterBag->get('kernel.project_dir') . '/src/Entity/uppercaseFields.json');
 			$uppercaseFields = json_decode($uppercaseFieldsJson);
 			$class = str_replace('\\', '_', get_class($entityId));
-			$reflectionClass = new ReflectionClass(get_class($entityId));
+			$reflectionClass = new \ReflectionClass(get_class($entityId));
 			$campos = $uppercaseFields->$class ?? [];
 			foreach ($campos as $field) {
 				$property = $reflectionClass->getProperty($field);
@@ -365,14 +314,19 @@ abstract class EntityHandler implements EntityHandlerInterface
 
 
 	/**
-	 * Para ser sobreescrito.
-	 *
-	 * @param $entityId
-	 * @return mixed|void
+	 * Para ser sobreescrito (caso necessário).
 	 */
-	public function beforeSave($entityId)
+	public function beforeSave($entityId): void
 	{
 
+	}
+
+
+	/**
+	 * Para ser sobreescrito (caso necessário).
+	 */
+	public function afterSave($entityId): void
+	{
 	}
 
 
@@ -381,22 +335,12 @@ abstract class EntityHandler implements EntityHandlerInterface
 	 *
 	 * @param $entityId
 	 */
-	public function afterSave($entityId)
+	public function posAfterSave($entityId): void
 	{
 	}
 
 
-	/**
-	 * Implementação vazia pois não é obrigatório.
-	 *
-	 * @param $entityId
-	 */
-	public function posAfterSave($entityId)
-	{
-	}
-
-
-	public function updateUpdated(string $tableName, int $id)
+	public function updateUpdated(string $tableName, int $id): void
 	{
 		if (!$id) {
 			throw new ViewException('Impossível realizar updated sem id da entidade');
@@ -413,16 +357,17 @@ abstract class EntityHandler implements EntityHandlerInterface
 		if ($userId) {
 			$params['user_updated_id'] = $userId;
 		}
-		$this->getDoctrine()->getConnection()->update($tableName, $params, ['id' => $id]);
+		$this->em->getManager()->getConnection()->update($tableName, $params, ['id' => $id]);
 	}
 
 
 	protected function getRegistroDaTabela(EntityId $entityId): ?array
 	{
-		$tableName = $this->doctrine->getClassMetadata($this->getEntityClass())->getTableName();
+		$tableName = $this->em->getManager()->getClassMetadata($this->getEntityClass())->getTableName();
 		$sql = 'SELECT * FROM ' . $tableName . ' WHERE id = :id';
 		$params = ['id' => $entityId->getId()];
-		return $this->getDoctrine()->getConnection()->fetchAssociative($sql, $params);
+		return $this->em->getManager()->getConnection()->fetchAssociative($sql, $params);
 	}
+
 
 }

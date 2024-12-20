@@ -11,7 +11,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\EntityHandler;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
 use CrosierSource\CrosierLibCoreBundle\Repository\Security\RoleRepository;
@@ -31,7 +30,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 	normalizationContext: ['groups' => ['role', 'entityId'], 'enable_max_depth' => true],
 	denormalizationContext: ['groups' => ['role'], 'enable_max_depth' => true],
 )]
-#[EntityHandler(entityHandlerClass: 'CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\RoleEntityHandler')]
 #[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'role', 'updated'], arguments: ['orderParameterName' => 'order'])]
 class Role implements EntityId

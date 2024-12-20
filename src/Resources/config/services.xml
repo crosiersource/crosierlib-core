@@ -6,14 +6,15 @@
 
 	<services>
 
-		<!-- EntityHandlerStateProcessor -->
-		<service id="crosier_source.crosier_lib_core_bundle.state_processor.entity_handler_state_processor"
-				 class="CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor">
-			<argument type="service" id="service_container"/>
-			<tag name="api_platform.state_processor"/>
+
+		<!-- SyslogBusiness -->
+		<service id="crosier_source.crosier_lib_core_bundle.business.syslog.syslog_business"
+				 class="CrosierSource\CrosierLibCoreBundle\Business\Syslog\SyslogBusiness">
+			<argument type="service" id="security.helper"/>
+			<argument type="service" id="monolog.logger"/>
 		</service>
-		<service id="CrosierSource\CrosierLibCoreBundle\StateProcessor\EntityHandlerStateProcessor"
-				 alias="crosier_source.crosier_lib_core_bundle.state_processor.entity_handler_state_processor" public="true" />
+		<service id="CrosierSource\CrosierLibCoreBundle\Business\Syslog\SyslogBusiness"
+				 alias="crosier_source.crosier_lib_core_bundle.business.syslog.syslog_business"/>
 
 
 		<!-- UppercaseFieldsJsonBuilderCommand -->
@@ -24,40 +25,21 @@
 			<tag name="console.command"/>
 		</service>
 		<service id="CrosierSource\CrosierLibCoreBundle\Command\Core\UppercaseFieldsJsonBuilderCommand"
-				 alias="crosier_source.crosier_lib_core_bundle.command.core.uppercase_fields_json_builder_command" public="true" />
+				 alias="crosier_source.crosier_lib_core_bundle.command.core.uppercase_fields_json_builder_command"
+				 public="true"/>
 
-		<!-- SyslogBusiness -->
-		<service id="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"
-				 class="CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness">
-			<argument type="service" id="doctrine"/>
-			<argument type="service" id="security.helper"/>
-			<argument type="service" id="monolog.logger"/>
-		</service>
-		<service id="CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness"
-				 alias="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"/>
 
-		<!-- EntityHandler -->
-		<service id="crosier_source.crosier_lib_core_bundle.entity_handler.entity_handler"
-				 class="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler">
-			<argument type="service" id="doctrine"/>
+		<!-- UserRepository -->
+		<service id="crosier_source.crosier_lib_core_bundle.repository.security.user_repository"
+				 class="CrosierSource\CrosierLibCoreBundle\Repository\Security\UserRepository">
+			<tag name="doctrine.repository_service"/>
+			<argument type="service" id="doctrine.orm.default_entity_manager"/>
 			<argument type="service" id="security.helper"/>
 			<argument type="service" id="parameter_bag"/>
-			<argument type="service" id="crosier_source.crosier_lib_core_bundle.business.config.syslog_business"/>
+			<argument type="service" id="crosier_source.crosier_lib_core_bundle.business.syslog.syslog_business"/>
 		</service>
-		<service id="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler"
-				 alias="crosier_source.crosier_lib_core_bundle.entity_handler.entity_handler"/>
-
-
-		<!-- GroupEntityHandler -->
-		<service id="crosier_source.crosier_lib_core_bundle.entity_handler.security.group_entity_handler"
-				 class="CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler"
-				 parent="CrosierSource\CrosierLibCoreBundle\EntityHandler\EntityHandler">
-			<argument type="service" id="doctrine"/>
-			<argument type="service" id="security.helper"/>
-			<argument type="service" id="parameter_bag"/>
-		</service>
-		<service id="CrosierSource\CrosierLibCoreBundle\EntityHandler\Security\GroupEntityHandler"
-				 alias="crosier_source.crosier_lib_core_bundle.entity_handler.security.group_entity_handler" public="true"/>
+		<service id="CrosierSource\CrosierLibCoreBundle\Repository\Security\UserRepository"
+				 alias="crosier_source.crosier_lib_core_bundle.repository.security.user_repository" public="true" />
 
 	</services>
 </container>

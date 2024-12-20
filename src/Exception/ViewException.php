@@ -2,7 +2,7 @@
 
 namespace CrosierSource\CrosierLibCoreBundle\Exception;
 
-use CrosierSource\CrosierLibCoreBundle\Business\Config\SyslogBusiness;
+use CrosierSource\CrosierLibCoreBundle\Business\Syslog\SyslogBusiness;
 use Throwable;
 
 /**
