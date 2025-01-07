@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
+use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\NotUppercase;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,14 +50,22 @@ class MenuItem implements EntityId
 
 	#[ORM\Column(name: 'label', type: 'string', length: 40, nullable: true)]
 	#[Groups('menuItem')]
+	#[NotUppercase]
 	public ?string $label = null;
+
+	#[ORM\Column(name: 'crosier_app', type: 'string', length: 255, nullable: true)]
+	#[Groups('menuItem')]
+	#[NotUppercase]
+	public ?string $crosierApp = null;
 
 	#[ORM\Column(name: 'url', type: 'string', length: 500, nullable: true)]
 	#[Groups('menuItem')]
+	#[NotUppercase]
 	public ?string $url = null;
 
 	#[ORM\Column(name: 'icon', type: 'string', length: 40, nullable: true)]
 	#[Groups('menuItem')]
+	#[NotUppercase]
 	public ?string $icon = null;
 
 	#[ORM\Column(name: 'tipo', type: 'string', length: 40, nullable: true)]
@@ -69,6 +78,7 @@ class MenuItem implements EntityId
 
 	#[ORM\Column(name: 'css_style', type: 'string', length: 2000, nullable: true)]
 	#[Groups('menuItem')]
+	#[NotUppercase]
 	public ?string $cssStyle = null;
 
 	#[ORM\Column(name: 'roles', type: 'string', length: 500, nullable: true)]

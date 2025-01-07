@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use CrosierSource\CrosierLibCoreBundle\Doctrine\Annotations\NotUppercase;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityId;
 use CrosierSource\CrosierLibCoreBundle\Entity\EntityIdTrait;
 use CrosierSource\CrosierLibCoreBundle\Repository\Security\UserRepository;
@@ -44,14 +45,17 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 
 	#[ORM\Column(name: 'username', type: 'string', length: 90, nullable: false)]
 	#[Groups('user')]
+	#[NotUppercase]
 	public ?string $username = null;
 
 	#[ORM\Column(name: 'password', type: 'string', length: 90, nullable: false)]
 	#[Groups('userPassword')]
+	#[NotUppercase]
 	public ?string $password = null;
 
 	#[ORM\Column(name: 'email', type: 'string', length: 90, nullable: false)]
 	#[Groups('user')]
+	#[NotUppercase]
 	public ?string $email = null;
 
 	#[ORM\Column(name: 'fone', type: 'string', length: 90)]
@@ -84,6 +88,7 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 
 	#[ORM\Column(name: 'api_token', type: 'string', length: 255, nullable: false)]
 	#[Groups('userPassword')]
+	#[NotUppercase]
 	public ?string $apiToken = null;
 
 	#[ORM\Column(name: 'api_token_expires_at', type: 'datetime', nullable: false)]
@@ -92,6 +97,7 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 
 	#[ORM\Column(name: 'token_recupsenha', type: 'string', length: 36, nullable: true)]
 	#[Groups('userPassword')]
+	#[NotUppercase]
 	public ?string $tokenRecupSenha = null;
 
 	#[ORM\Column(name: 'dt_valid_token_recupsenha', type: 'datetime', nullable: false)]

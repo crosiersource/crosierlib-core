@@ -45,8 +45,8 @@ abstract class CrosierBaseRepository extends FilterRepository
 
 	private function validEntity($args): bool
 	{
-		return $args->getObject() instanceof EntityId;
-		//&& $this->getEntityClass() === get_class($args->getObject());
+		return (($args->getObject() instanceof EntityId)
+			&& ($this->getEntityClass() === get_class($args->getObject())));
 	}
 
 	public function prePersist(PrePersistEventArgs $args): void
@@ -301,8 +301,10 @@ abstract class CrosierBaseRepository extends FilterRepository
 			$campos = $uppercaseFields->$class ?? [];
 			foreach ($campos as $field) {
 				$property = $reflectionClass->getProperty($field);
-				$property->setAccessible(true);
-				$property->setValue($entityId, trim(mb_strtoupper($property->getValue($entityId))));
+				if ($property->getValue($entityId) !== null) {
+					$property->setAccessible(true);
+					$property->setValue($entityId, trim(mb_strtoupper($property->getValue($entityId))));
+				}
 			}
 		} catch (\ReflectionException $e) {
 			$msg = ExceptionUtils::treatException($e);
@@ -316,7 +318,7 @@ abstract class CrosierBaseRepository extends FilterRepository
 	/**
 	 * Para ser sobreescrito (caso necessário).
 	 */
-	public function beforeSave($entityId): void
+	public function beforeSave(EntityId $entityId): void
 	{
 
 	}

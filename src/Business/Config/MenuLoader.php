@@ -3,15 +3,18 @@
 namespace CrosierSource\CrosierLibCoreBundle\Business\Config;
 
 use CrosierSource\CrosierLibCoreBundle\Entity\Config\MenuItem;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class MenuLoader
+readonly class MenuLoader
 {
 
 	public function __construct(
 		#[Autowire()]
 		private EntityManagerInterface $doctrine,
+		private LoggerInterface        $logger,
 	)
 	{
 		// ...
@@ -19,9 +22,13 @@ class MenuLoader
 
 	public function load(): void
 	{
-		$filePath = __DIR__ . '/../../../menu/menu.yaml';
+		$filePath = __DIR__ . '/../../../../' . $_SERVER['CROSIERAPP_ID'] . '/menu/menu.yaml';
+		if (!file_exists($filePath)) {
+			$this->logger->error('Arquivo de menu não encontrado: ' . $filePath);
+			return;
+		}
 		$menuData = Yaml::parseFile($filePath)['menu_items'] ?? [];
-		$this->truncateTable();
+		$this->deleteMenuItensDoCrosierApp();
 		$this->parseMenuItems($menuData);
 	}
 
@@ -31,6 +38,8 @@ class MenuLoader
 		foreach ($items as $item) {
 			foreach ($item as $label => $data) {
 				$menuItem = new MenuItem();
+				$menuItem->crosierApp = $_SERVER['CROSIERAPP_ID'];
+				$this->logger->info("Incluindo: " . $label);
 				$menuItem->label = $label;
 				$menuItem->pai = $pai;
 				$ordem = $menuItem?->ordem ?? $data['ordem'] ?? $ordem;
@@ -54,22 +63,27 @@ class MenuLoader
 					$menuItem->tipo = 'PAI';
 				}
 				$menuItem->ordem = $ordem++;
+
 				$this->doctrine->persist($menuItem);
 				$this->doctrine->flush();
 
 				if (!empty($data['filhos'])) {
 					$this->parseMenuItems($data['filhos'], $menuItem);
 				}
-				$bla = 1;
 			}
 		}
 	}
 
-	private function truncateTable()
+	private function deleteMenuItensDoCrosierApp(): void
 	{
-		$connection = $this->doctrine->getConnection();
-		$platform = $connection->getDatabasePlatform();
-		$connection->executeStatement($platform->getTruncateTableSQL('cfg_menu_item', true));
+		try {
+			$this->logger->info('Deletando itens de menu do CrosierApp: ' . $_SERVER['CROSIERAPP_ID']);
+			$connection = $this->doctrine->getConnection();
+			$connection->executeStatement("DELETE FROM cfg_menu_item WHERE crosier_app = :crosier_app", ['crosier_app' => $_SERVER['CROSIERAPP_ID']]);
+		} catch (Exception $e) {
+			$this->logger->error('Erro ao deletar os itens de menu do CrosierApp: ' . $_SERVER['CROSIERAPP_ID'] . ' (' . $e->getMessage() . ')');
+		}
 	}
+
 
 }

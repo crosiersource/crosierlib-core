@@ -29,6 +29,28 @@
 				 public="true"/>
 
 
+		<!-- MenuLoader -->
+		<service id="crosier_source.crosier_lib_core_bundle.business.config.menu_loader"
+				 class="CrosierSource\CrosierLibCoreBundle\Business\Config\MenuLoader">
+			<argument type="service" id="doctrine.orm.default_entity_manager"/>
+			<argument type="service" id="monolog.logger"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\Business\Config\MenuLoader"
+				 alias="crosier_source.crosier_lib_core_bundle.business.config.menu_loader"
+				 public="true"/>
+
+		<!-- MenuLoaderCommand -->
+		<service id="crosier_source.crosier_lib_core_bundle.command.core.menu_loader_command"
+				 class="CrosierSource\CrosierLibCoreBundle\Command\Core\MenuLoaderCommand">
+			<argument type="service" id="monolog.logger"/>
+			<argument type="service" id="crosier_source.crosier_lib_core_bundle.business.config.menu_loader"/>
+			<tag name="console.command"/>
+		</service>
+		<service id="CrosierSource\CrosierLibCoreBundle\Command\Core\MenuLoaderCommand"
+				 alias="crosier_source.crosier_lib_core_bundle.command.core.menu_loader_command"
+				 public="true"/>
+
+
 		<!-- UserRepository -->
 		<service id="crosier_source.crosier_lib_core_bundle.repository.security.user_repository"
 				 class="CrosierSource\CrosierLibCoreBundle\Repository\Security\UserRepository">

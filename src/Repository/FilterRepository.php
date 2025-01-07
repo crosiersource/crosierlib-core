@@ -92,6 +92,12 @@ abstract class FilterRepository extends ServiceEntityRepository
 		return $query->getResult();
 	}
 
+	public function getEntityClass(): string
+	{
+		return $this->entityClass;
+	}
+
+
 	/**
 	 * Monta o "FROM" da query.
 	 *
