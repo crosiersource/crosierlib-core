@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Table(name: 'sec_user')]
 #[ApiResource(
 	operations: [
-		new Get(uriTemplate: '/sec/user/{id}', requirements: ['id' => '\d+']),
+		new Get(uriTemplate: '/sec/user/{id}', requirements: ['id' => '\d+'], security: "is_granted('ROLE_ADMIN')"),
 		new GetCollection(uriTemplate: '/sec/user'),
 		new Post(uriTemplate: '/sec/user'),
 		new Put(uriTemplate: '/sec/user/{id}', requirements: ['id' => '\d+']),
@@ -120,7 +120,7 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 
 	public function getUserRoles(): array
 	{
-		$userRoles = array();
+		$userRoles = [];
 		foreach ($this->userRoles as $userRole) {
 			$userRoles[] = $userRole;
 		}
@@ -204,7 +204,11 @@ class User implements EntityId, UserInterface, \Serializable, PasswordAuthentica
 
 	public function getRoles(): array
 	{
-		return $this->getUserRoles();
+		$roles = [];
+		foreach ($this->getUserRoles() as $role) {
+			$roles[] = $role->getRole();
+		}
+		return $roles;
 	}
 
 
